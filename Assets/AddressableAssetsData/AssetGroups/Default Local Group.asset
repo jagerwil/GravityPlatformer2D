@@ -16,7 +16,7 @@ MonoBehaviour:
   m_GUID: 8896daef243cd0b439b5cfb584bfaf25
   m_SerializeEntries:
   - m_GUID: 8c9cfa26abfee488c85f1582747f6a02
-    m_Address: Assets/Scenes/Game.unity
+    m_Address: Assets/Scenes/Gameplay.unity
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

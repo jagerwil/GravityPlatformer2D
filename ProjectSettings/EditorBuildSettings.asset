@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/EntryPoint.unity
     guid: 8a9b185babcaca546a8b947a3acb3ae2
   - enabled: 0
-    path: Assets/Scenes/Game.unity
+    path: Assets/Scenes/Gameplay.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 9e7eca0f99dfcbf4fa8ae8aa3a0cc0b1, type: 2}
