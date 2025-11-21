@@ -25,9 +25,6 @@ namespace GravityPlatformer2D.Gameplay.Characters {
             
             _gravityVelocity = GetGravityVelocity(gravityAcceleration, deltaTime);
             var moveVelocity = GetMovementVelocity(angle);
-            
-            Debug.DrawLine(_rigidbody.position, _rigidbody.position + _gravityVelocity, Color.red);
-            Debug.DrawLine(_rigidbody.position, _rigidbody.position + moveVelocity, Color.orange);
 
             _rigidbody.linearVelocity = _gravityVelocity + moveVelocity;
             _rigidbody.rotation = angle;
