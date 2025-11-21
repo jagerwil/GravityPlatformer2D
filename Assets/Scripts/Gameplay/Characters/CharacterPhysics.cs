@@ -1,4 +1,4 @@
-using GravityPlatformer2D.Gameplay.Gravity;
+using System;
 using GravityPlatformer2D.Gameplay.Gravity.Receivers;
 using Jagerwil.Extensions;
 using UnityEngine;
@@ -6,40 +6,62 @@ using UnityEngine;
 namespace GravityPlatformer2D.Gameplay.Characters {
     public class CharacterPhysics : MonoBehaviour {
         [SerializeField] private GravityReceiver _gravityReceiver;
-        [SerializeField] private CharacterMovement _movement;
+        [SerializeField] private GroundChecker _groundChecker;
         [SerializeField] private Rigidbody2D _rigidbody;
 
+        private Vector2 _moveVector;
+        private Vector2 _gravityDirection;
+        private Vector2 _gravityVelocity;
+
         private void FixedUpdate() {
-            Debug.Log("Gravity receiver fixed update!");
             var gravityAcceleration = _gravityReceiver.GetGravityAcceleration();
             if (gravityAcceleration.ApproximatelyZero()) {
                 Debug.LogWarning("Gravity acceleration = 0 is not supported!");
             }
 
-            var velocity = _rigidbody.linearVelocity;
-            var angle = Vector2.SignedAngle(Vector3.down, gravityAcceleration);
+            _gravityDirection = gravityAcceleration.normalized;
+            var angle = Vector2.SignedAngle(Vector3.down, _gravityDirection);
+            var deltaTime = Time.fixedDeltaTime;
             
-            var gravityVelocity = GetGravityVelocity(velocity, gravityAcceleration);
-            var moveVelocity = GetMovementVelocity(angle, gravityAcceleration);
+            _gravityVelocity = GetGravityVelocity(gravityAcceleration, deltaTime);
+            var moveVelocity = GetMovementVelocity(angle);
             
-            Debug.DrawLine(_rigidbody.position, _rigidbody.position + gravityVelocity, Color.red);
+            Debug.DrawLine(_rigidbody.position, _rigidbody.position + _gravityVelocity, Color.red);
             Debug.DrawLine(_rigidbody.position, _rigidbody.position + moveVelocity, Color.orange);
 
-            _rigidbody.linearVelocity = gravityVelocity + moveVelocity;
+            _rigidbody.linearVelocity = _gravityVelocity + moveVelocity;
             _rigidbody.rotation = angle;
         }
 
-        private Vector2 GetGravityVelocity(Vector2 velocity, Vector2 gravityAcceleration) {
-            var gravityVelocity = (Vector2)Vector3.Project(velocity, gravityAcceleration);
-            gravityVelocity += gravityAcceleration * Time.fixedDeltaTime;
+        public void SetMoveVector(Vector2 moveVector) {
+            _moveVector = moveVector;
+        }
+
+        public void Jump(float jumpForce) {
+            if (!_groundChecker.IsColliding) {
+                return;
+            }
+
+            var jumpDirection = -1f * _gravityDirection;
+            
+            _groundChecker.IgnoreCollisionsTemporarily();
+            _gravityVelocity += jumpDirection * jumpForce;
+        }
+
+        private Vector2 GetGravityVelocity(Vector2 gravityAcceleration, float deltaTime) {
+            if (_groundChecker.IsColliding) {
+                return Vector2.zero;
+            }
+
+            var gravityVelocity = (Vector2)Vector3.Project(_gravityVelocity, gravityAcceleration);
+            gravityVelocity += gravityAcceleration * deltaTime;
+            //var gravityVelocity = _gravityVelocity + gravityAcceleration * deltaTime;
             return gravityVelocity;
         }
 
-        private Vector2 GetMovementVelocity(float angle, Vector2 gravityAcceleration) {
-            var moveVector = _movement.GetMoveVector();
+        private Vector2 GetMovementVelocity(float angle) {
             var rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            Debug.Log($"Rotation: {rotation.eulerAngles.z}, moveVector: {moveVector}, gravityAcceleration: {gravityAcceleration}");
-            return (Vector2)(rotation * moveVector);
+            return (Vector2)(rotation * _moveVector);
         }
     }
 }

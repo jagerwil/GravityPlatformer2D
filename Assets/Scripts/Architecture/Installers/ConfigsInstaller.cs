@@ -7,11 +7,13 @@ namespace GravityPlatformer2D.Architecture.Installers {
     public class ConfigsInstaller : ScriptableObjectInstaller {
         [SerializeField] private SceneAddressesConfig _scenesAddresses;
         [Space]
+        [SerializeField] private GameConfig _game;
         [SerializeField] private PlayerConfig _player;
         
         public override void InstallBindings() {
             Container.Bind<SceneAddressesConfig>().FromInstance(_scenesAddresses).AsSingle();
             
+            Container.Bind<GameConfig>().FromInstance(_game).AsSingle();
             Container.Bind<PlayerConfig>().FromInstance(_player).AsSingle();
         }
     }

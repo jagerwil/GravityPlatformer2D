@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: ConfigsInstaller
   m_EditorClassIdentifier: Assembly-CSharp::GravityPlatformer2D.Architecture.Installers.ConfigsInstaller
   _scenesAddresses: {fileID: 11400000, guid: 8244052bd3f58424280a5a72bbdafcd7, type: 2}
+  _game: {fileID: 11400000, guid: 30c669a488c64c740b4d8d57c35974e7, type: 2}
   _player: {fileID: 11400000, guid: e690ec92422ba5147ae5a090dc92d8d7, type: 2}
