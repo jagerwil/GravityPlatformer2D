@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GravityPlatformer2D.Gameplay._Services {
     public interface IInputProcessor {
-        public ReadOnlyReactiveProperty<float> MoveVector { get; }
+        public ReadOnlyReactiveProperty<float> MoveAxis { get; }
         public event Action onJumpButtonPressed;
 
         public void Enable();

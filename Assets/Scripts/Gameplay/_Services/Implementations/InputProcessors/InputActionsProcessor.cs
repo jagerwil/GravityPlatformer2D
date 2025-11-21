@@ -3,19 +3,19 @@ using R3;
 
 namespace GravityPlatformer2D.Gameplay._Services.Implementations.InputProcessors {
     public class InputActionsProcessor : IInputProcessor {
-        private readonly ReactiveProperty<float> _moveVector = new();
+        private readonly ReactiveProperty<float> _moveAxis = new();
         private readonly InputActions _inputActions = new();
         
-        public ReadOnlyReactiveProperty<float> MoveVector => _moveVector;
+        public ReadOnlyReactiveProperty<float> MoveAxis => _moveAxis;
         public event Action onJumpButtonPressed;
 
         public InputActionsProcessor() {
             _inputActions.Player.Move.performed += (ctx) => {
-                _moveVector.Value = ctx.ReadValue<float>();
+                _moveAxis.Value = ctx.ReadValue<float>();
             };
 
             _inputActions.Player.Move.canceled += _ => {
-                _moveVector.Value = 0f;
+                _moveAxis.Value = 0f;
             };
 
             _inputActions.Player.Jump.performed += _ => {

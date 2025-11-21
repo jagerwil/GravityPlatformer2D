@@ -6,21 +6,21 @@ using UnityEngine;
 namespace GravityPlatformer2D.Gameplay._Services.Implementations {
     public class InputService : IInputService, IDisposable {
         private readonly CompositeDisposable _disposables = new();
-        private readonly ReactiveProperty<float> _moveVector = new();
+        private readonly ReactiveProperty<float> _moveAxis = new();
 
         private Dictionary<Type, IInputProcessor> _inputProcessors = new();
 
-        public ReadOnlyReactiveProperty<float> MoveVector => _moveVector;
+        public ReadOnlyReactiveProperty<float> MoveAxis => _moveAxis;
         public event Action onJumpButtonPressed;
 
-        public InputService(params IInputProcessor[] processors) {
+        public InputService(List<IInputProcessor> processors) {
             foreach (var processor in processors) {
                 _inputProcessors.Add(processor.GetType(), processor);
             }
             
             foreach (var inputProcessor in _inputProcessors.Values) {
-                inputProcessor.MoveVector
-                              .Subscribe(MovementVectorChanged)
+                inputProcessor.MoveAxis
+                              .Subscribe(MovementAxisChanged)
                               .AddTo(_disposables);
                 
                 inputProcessor.onJumpButtonPressed += JumpButtonPressed;
@@ -56,14 +56,14 @@ namespace GravityPlatformer2D.Gameplay._Services.Implementations {
             return inputProcessor as T;
         }
 
-        private void MovementVectorChanged(float moveVector) {
-            var moveVectorSum = 0f;
+        private void MovementAxisChanged(float moveAxis) {
+            var moveAxisSum = 0f;
 
             foreach (var inputProcessor in _inputProcessors.Values) {
-                moveVectorSum += inputProcessor.MoveVector.CurrentValue;
+                moveAxisSum += inputProcessor.MoveAxis.CurrentValue;
             }
             
-            _moveVector.Value = Mathf.Clamp(moveVectorSum, -1f, 1f);
+            _moveAxis.Value = Mathf.Clamp(moveAxisSum, -1f, 1f);
         }
 
         private void JumpButtonPressed() {
